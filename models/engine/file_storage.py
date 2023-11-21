@@ -14,7 +14,7 @@ class FileStorage:
             return self.__objects
         else:
             filter_objects = {}
-            for k, v in self.__objects.items()
+            for k, v in self.__objects.items():
                 if isinstance(v, cls):
                     filter_objects[k] = v
             return filter_objects
