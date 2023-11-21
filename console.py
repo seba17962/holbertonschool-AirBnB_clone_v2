@@ -134,10 +134,12 @@ class HBNBCommand(cmd.Cmd):
             print(f"Error creating instance: {e}")
             return
 
-        for param in parameters:
-            key_name, value = param.split('=')
+        for param in all_args[1:]:
+            parameters = param.split('=')
+            key_name = parameters[0]
+            value = parameters[1]
 
-            if '"' in value:
+            if value[0] == '\"':
                 value = value.strip('"').replace('_', ' ')
 
             elif '.' in value:
