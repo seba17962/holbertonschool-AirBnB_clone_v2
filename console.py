@@ -126,11 +126,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
 
-        try:
-            new_instance = HBNBCommand.classes[first_arg]()
-        except Exception as e:
-            print(f"Error creating instance: {e}")
-            return
+        new_instance = HBNBCommand.classes[first_arg]()
 
         for param in all_args[1:]:
             parameters = param.split('=')
@@ -138,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             value = parameters[1]
 
             if value[0] == '\"':
-                value = value.strip('"').replace('_', ' ')
+                value = value.replace('"').replace('_', ' ')
 
             elif '.' in value:
                 value = float(value)
