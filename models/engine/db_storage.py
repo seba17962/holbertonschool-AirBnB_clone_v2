@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """ Db storage for HBNB project """
-from sqlalchemy import create_engine
 from os import getenv
+from sqlalchemy import create_engine
+from sqlalchemy import Column
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 
@@ -24,7 +25,7 @@ class DBStorage():
         )
         self.__engine = create_engine(url_str, pool_pre_ping=True)
 
-        if getenv("HBNB_ENV") == 'test':
+        if  getenv("HBNB_ENV") == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -49,11 +50,6 @@ class DBStorage():
                     )] = obj
             return obj_dict
     
-    def delete(self, obj=None):
-        """Delete a given object."""
-        if obj is not None:
-            self.__session.delete(obj)
-
     def new(self, obj):
         """Create new object."""
         if obj is not None:
@@ -63,14 +59,18 @@ class DBStorage():
         """save"""
         self.__session.commit()
 
+    def delete(self, obj=None):
+        """Delete a given object."""
+        if obj is not None:
+            self.__session.delete(obj)
+
     def reload(self):
-        from models.user import User
-        from models.city import City
-        from models.place import Place
-        from models.state import State
-        from models.review import Review
-        from models.amenity import Amenity
+        """Loads objects from db and create new session"""
         Base.metadata.create_all(self.__engine)
-        Session = scoped_session(sessionmaker(
-            bind=self.__engine, expire_on_commit=False))
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
+        Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        self.__session.close()
