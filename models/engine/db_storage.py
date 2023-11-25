@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 """ Db storage for HBNB project """
-from sqlalchemy import create_engine , MetaData
+from sqlalchemy import create_engine
 from os import getenv
+from sqlalchemy.orm import sessionmaker, scoped_session
+from models.base_model import Base
 
-class DBstorage():
+
+class DBStorage():
     """class"""
     __engine = None
     __session = None
@@ -22,9 +25,52 @@ class DBstorage():
         self.__engine = create_engine(url_str, pool_pre_ping=True)
 
         if getenv("HBNB_ENV") == 'test':
-            self.drop_all(self.__engine)
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Returns all instances of the given class"""
-        new_dict = {}
-        
+        """Retun instances of a given class or all classes"""
+        obj_dict = {}
+        self.__session = sessionmaker(bind=self.__engine)()
+        if cls is not None:
+            sess_objs = self.__session.query(cls).all()
+            for obj in sess_objs:
+                obj_dict['{}.{}'.format(
+                    obj.__class__.__name__,
+                    obj.id
+                )] = obj
+            return obj_dict
+        else:
+            sess_objs = self.__session.query(cls).all()
+            for obj in sess_objs:
+                if obj.__class__.__name__ != 'BaseModel':
+                    obj_dict['{}.{}'.format(
+                        obj.__class__.__name__,
+                        obj.id
+                    )] = obj
+            return obj_dict
+    
+    def delete(self, obj=None):
+        """Delete a given object."""
+        if obj is not None:
+            self.__session.delete(obj)
+
+    def new(self, obj):
+        """Create new object."""
+        if obj is not None:
+            self.__session.add(obj)
+
+    def save(self):
+        """save"""
+        self.__session.commit()
+
+    def reload(self):
+        from models.user import User
+        from models.city import City
+        from models.place import Place
+        from models.state import State
+        from models.review import Review
+        from models.amenity import Amenity
+        Base.metadata.create_all(self.__engine)
+        Session = scoped_session(sessionmaker(
+            bind=self.__engine, expire_on_commit=False))
+        self.__session = Session()
