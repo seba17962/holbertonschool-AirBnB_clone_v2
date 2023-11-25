@@ -113,33 +113,32 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
-        """ Create an object of any class"""
-        if not args:
+    def do_create(self, arg):
+        """ Create an object of any class with atrributes"""
+        if not arg:
             print("** class name missing **")
             return
-        argList = args.split()
-        ClassNm = argList[0]
-        if ClassNm not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
 
-        new_instance = HBNBCommand.classes[ClassNm]()
+        args = arg.split()
+        class_name = args[0]
+        new_instance = HBNBCommand.classes[class_name]()
 
-        for arg in argList[1:]:
-            parameter = arg.split('=')
-            key = parameter[0]
-            value = parameter[1]
-
+        for ar in args[1:]:
+            name, value = ar.split('=')
             if value[0] == '\"':
-                value = value.replace('\"','').replace('_', ' ')
+                value = value.replace('\"', '').replace('_', ' ')
+
             elif '.' in value:
                 value = float(value)
+
             else:
                 value = int(value)
 
-            setattr(new_instance, key, value)
+            setattr(new_instance, name, value)
 
+        if class_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
         storage.save()
         new_instance.save()
         print(new_instance.id)
@@ -206,7 +205,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -215,24 +214,23 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the destroy command """
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
-    
+
     def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
-        print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
+        """Prints all string representation of all instances
+        specifying or not on the class name\n"""
+        arg_list = args.split()
+        objList = []
+        if len(arg_list) == 0:
+            for key in storage.all().keys():
+                objList.append(str(storage.all()[key]))
+        if len(arg_list) == 1:
+            if args.strip() in HBNBCommand.classes:
+                for name, model in storage.all(eval(args)).items():
+                    if name.split('.')[0] == args.strip():
+                        objList.append(str(model))
+            else:
                 print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
-        else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+        print(objList)
 
     def help_all(self):
         """ Help information for the all command """
@@ -338,6 +336,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
