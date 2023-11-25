@@ -215,7 +215,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the destroy command """
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
-
+    
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
@@ -233,7 +233,6 @@ class HBNBCommand(cmd.Cmd):
                 print_list.append(str(v))
 
         print(print_list)
-
     def help_all(self):
         """ Help information for the all command """
         print("Shows all objects, or all of a class")
