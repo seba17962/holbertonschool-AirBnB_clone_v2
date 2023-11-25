@@ -20,9 +20,7 @@ class FileStorage:
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        key = str(obj.__class__.__name__) + "." + str(obj.id)
-        value_dict = obj
-        FileStorage.__objects[key] = value_dict
+        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
         """Saves storage dictionary to file"""
@@ -60,7 +58,6 @@ class FileStorage:
     def delete(self, obj=None):
         """Delete obj from __objects if it is inside"""
         if obj is not None:
-            return
-        key_delete = obj.__class__.__name__ + "." + obj.id
-        if key_delete in self.__objects:
-            del self.__objects[key_delete]
+            key_delete = obj.__class__.__name__ + "." + obj.id
+            if key_delete in self.__objects:
+                del self.__objects[key_delete]
