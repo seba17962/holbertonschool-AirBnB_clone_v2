@@ -2,7 +2,6 @@
 """ Db storage for HBNB project """
 from os import getenv
 from sqlalchemy import create_engine
-from sqlalchemy import Column
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 
@@ -66,10 +65,15 @@ class DBStorage():
 
     def reload(self):
         """Loads objects from db and create new session"""
+        from models.user import User
+        from models.city import City
+        from models.place import Place
+        from models.state import State
+        from models.review import Review
+        from models.amenity import Amenity
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
-        Session = scoped_session(session_factory)
+        Session = scoped_session(sessionmaker(
+            bind=self.__engine, expire_on_commit=False))
         self.__session = Session()
 
     def close(self):
