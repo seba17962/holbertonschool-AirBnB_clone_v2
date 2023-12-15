@@ -31,11 +31,11 @@ def text(text):
     return f'C {format_text}'
 
 
-@app.route("/python/<text>", strict_slashes=False)
-def python(text="is cool"):
+@app.route("/python/<second_text>", strict_slashes=False)
+def python_text(second_text="is cool"):
     """_summary_
     """
-    format_python_text = text.replace('_', ' ')
+    format_python_text = second_text.replace('_', ' ')
     return f'Python {format_python_text}'
     
 if __name__ == '__main__':
