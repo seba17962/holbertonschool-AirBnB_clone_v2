@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 @app.route("/", strict_slashes=False)
 def helloHBNB():
+    """_summary_"""
     return "<p>Hello HBNB!</p>"
 
 
