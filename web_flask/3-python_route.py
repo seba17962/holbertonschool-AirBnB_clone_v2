@@ -26,14 +26,15 @@ def hbnb():
 @app.route("/c/<text>", strict_slashes=False)
 def text(text):
     """_summary_
-
     """
     format_text = text.replace('_', ' ')
     return f'C {format_text}'
 
 
 @app.route("/python/<text>", strict_slashes=False)
-def python(text= "is cool"):
+def python(text="is cool"):
+    """_summary_
+    """
     format_python_text = text.replace('_', ' ')
     return f'Python {format_python_text}'
     
