@@ -40,15 +40,11 @@ def python_text(text='is_cool'):
     return f'Python {format_python_text}'
 
 
-@app.route("/number/<n>", strict_slashes=False)
+@app.route("/number/<int:n>", strict_slashes=False)
 def number(n):
     """_summary_
     """
-    try:
-        n = int(n)
-        return f"{n} is a number"
-    except TypeError:
-        return f"invalid literal for int() with base 10: {'n'}"
+    return f"{n} is a number"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
