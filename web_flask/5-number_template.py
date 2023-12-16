@@ -3,7 +3,7 @@
     task 2
 
     """
-from flask import Flask
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
@@ -48,8 +48,8 @@ def number(n):
 
 
 @app.route("/number_template/<int:n>", strict_slashes=False)
-def number_template(n):
-    return number_template('5-number.html', n=n)
+def function(n):
+    return render_template('5-number.html', n=n)
 
 
 if __name__ == '__main__':
