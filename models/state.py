@@ -16,7 +16,7 @@ class State(BaseModel, Base):
         cities = relationship("City", backref="state",
                               cascade='all, delete-orphan')
     else:
-        @ property
+        @property
         def cities(self):
             """Return all cities linked to this relationship."""
             from models import storage
