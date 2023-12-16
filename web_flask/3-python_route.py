@@ -30,13 +30,13 @@ def text(text):
     format_text = text.replace('_', ' ')
     return f'C {format_text}'
 
-
-@app.route("/python/<second_text>", strict_slashes=False)
-def python_text(second_text="is cool"):
+@app.route("/python/", strict_slashes=False)
+@app.route("/python/<text>", strict_slashes=False)
+def python_text(text='is_cool'):
     """_summary_
     """
-    format_python_text = second_text.replace('_', ' ')
+    format_python_text = text.replace('_', ' ')
     return f'Python {format_python_text}'
-    
+ 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
