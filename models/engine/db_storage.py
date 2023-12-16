@@ -24,7 +24,7 @@ class DBStorage():
         )
         self.__engine = create_engine(url_str, pool_pre_ping=True)
 
-        if  getenv("HBNB_ENV") == 'test':
+        if getenv("HBNB_ENV") == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -48,7 +48,7 @@ class DBStorage():
                         obj.id
                     )] = obj
             return obj_dict
-    
+
     def new(self, obj):
         """Create new object."""
         if obj is not None:
